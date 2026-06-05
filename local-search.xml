@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>主席树的血域泪</title>
+    <link href="/2026/06/05/%E4%B8%BB%E5%B8%AD%E6%A0%91%E7%9A%84%E8%A1%80%E5%9F%9F%E6%B3%AA/"/>
+    <url>/2026/06/05/%E4%B8%BB%E5%B8%AD%E6%A0%91%E7%9A%84%E8%A1%80%E5%9F%9F%E6%B3%AA/</url>
+    
+    <content type="html"><![CDATA[<p>引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 <code>RE</code> 或 <code>WA</code>。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。</p><h2 id="🛠️-核心原理：我们在解决什么问题？"><a href="#🛠️-核心原理：我们在解决什么问题？" class="headerlink" title="🛠️ 核心原理：我们在解决什么问题？"></a>🛠️ 核心原理：我们在解决什么问题？</h2><p>主席树的核心任务是：<strong>求区间第 $k$ 大&#x2F;小。</strong><br>如果只是求全局第 $k$ 小，我们只需要一棵线段树维护值域。但如果要查区间 $[L, R]$，利用<strong>前缀和</strong>的思想，我们需要第 $R$ 步的线段树减去第 $L-1$ 步的线段树。</p><p>如果每一步都建一棵新树，空间复杂度是 $\mathcal{O}(N^2)$，直接爆炸。<br>所以我们要**“偷懒”**——只新建有变化的节点，剩下的全部连向历史版本。</p><hr><h2 id="💻-核心代码与精妙之处拆解"><a href="#💻-核心代码与精妙之处拆解" class="headerlink" title="💻 核心代码与精妙之处拆解"></a>💻 核心代码与精妙之处拆解</h2><p>下面是完整的实现代码，里面藏着几个非常高级的技巧。</p><pre><code class="language-cpp">#include&lt;bits/stdc++.h&gt;using namespace std;using ll=long long;int cnt=1;struct Node {    int val;    int l,r;}a[5000000]; // 🩸 血泪点1：数组一定要开够大！通常是 N * 40// ✨ 精妙点1：完全不需要 build 方法int insert(int q, int i, int l, int r) {    int p = cnt++;    a[p] = a[q]; // ✨ 精妙点2：直接复制历史节点的所有信息（左右儿子指针和权值）    a[p].val++;    if (l == r) { return p; }    int mid = (l + r) &gt;&gt; 1;    if (i &lt;= mid) a[p].l = insert(a[q].l, i, l, mid);    if (i &gt; mid)  a[p].r = insert(a[q].r, i, mid + 1, r);    return p;}int query(int q, int p, int k, int l, int r) {    if (l == r) { return l; } // 返回离散化后的下标    int dif = a[a[q].l].val - a[a[p].l].val; // 前缀和思想：当前区间左子树贡献的频次    int mid = (l + r) &gt;&gt; 1;    if (k &lt;= dif) { return query(a[q].l, a[p].l, k, l, mid); }    return query(a[q].r, a[p].r, k - dif, mid + 1, r); // 去右子树找第 k - dif 小}int main() {    ios::sync_with_stdio(false); cin.tie(nullptr);    int n, q; cin &gt;&gt; n &gt;&gt; q;    vector&lt;ll&gt; nums(n + 1);    vector&lt;ll&gt; nums1(n + 1); // 副本，用于离散化    unordered_map&lt;ll, int&gt; mp;    for (int i = 1; i &lt;= n; i++) {        cin &gt;&gt; nums[i];        nums1[i] = nums[i];    }        // 🩸 血泪点2：离散化三步走（注意 vector 1-indexed 的擦除问题）    sort(nums1.begin() + 1, nums1.end());    auto it = unique(nums1.begin() + 1, nums1.end());    nums1.erase(it, nums1.end());    int s = nums1.size() - 1;    for (int i = 1; i &lt;= s; i++) { mp[nums1[i]] = i; }        // 根节点数组，用于记录每次插入后的新树根    vector&lt;int&gt; root(n + 1, 0);    for (int i = 1; i &lt;= n; i++) {        root[i] = insert(root[i - 1], mp[nums[i]], 1, s); // 复用上一棵树 root[i-1]    }        // 询问    for (int i = 0; i &lt; q; i++) {        int u, v, k; cin &gt;&gt; u &gt;&gt; v &gt;&gt; k;        // 🩸 血泪点3：前缀和区间是 root[v] 和 root[u-1]        cout &lt;&lt; nums1[query(root[v], root[u - 1], k, 1, s)] &lt;&lt; &#39;\n&#39;;    }    return 0;}</code></pre>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>数据结构</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/2026/06/05/hello-world/"/>
     <url>/2026/06/05/hello-world/</url>

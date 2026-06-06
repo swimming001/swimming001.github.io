@@ -19,22 +19,21 @@
   <meta name="author" content="Swimming">
   <meta name="keywords" content="">
   
-    <meta name="description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。 🛠️ 核心原理：我们在解决什么问题？主席树的核心任务是：求区间第 $k$ 大&#x2F;小。如果只是求全局第 $k$ 小，我们只需要一棵线段树维护值域。但如果要查区间 $[L, R]$，利用前缀和的思想，我们需要第 $R$">
+    <meta name="description" content="从朴素筛法的复杂度分析出发，逐步走入质数分布的核心规律。   1. 埃拉托斯特尼筛法 (Sieve of Eratosthenes)找出所有不超过 $N$ 的质数的经典算法：  列出从 $2$ 到 $N$ 的所有整数。 从 $p&#x3D;2$ 开始，划去所有 $p$ 的倍数（$p^2, p^2+p, \dots$）。 找到下一个未被划去的数作为新的 $p$，重复直到 $p &gt; \sqrt">
 <meta property="og:type" content="article">
-<meta property="og:title" content="主席树的血与泪">
-<meta property="og:url" content="https://swimming001.github.io/posts/%E4%B8%BB%E5%B8%AD%E6%A0%91%E7%9A%84%E8%A1%80%E4%B8%8E%E6%B3%AA.html">
+<meta property="og:title" content="一切从埃筛的时间复杂度开始">
+<meta property="og:url" content="https://swimming001.github.io/posts/%E4%B8%80%E5%88%87%E4%BB%8E%E5%9F%83%E7%AD%9B%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%BC%80%E5%A7%8B.html">
 <meta property="og:site_name" content="Swimming&#39;s Blog">
-<meta property="og:description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。 🛠️ 核心原理：我们在解决什么问题？主席树的核心任务是：求区间第 $k$ 大&#x2F;小。如果只是求全局第 $k$ 小，我们只需要一棵线段树维护值域。但如果要查区间 $[L, R]$，利用前缀和的思想，我们需要第 $R$">
+<meta property="og:description" content="从朴素筛法的复杂度分析出发，逐步走入质数分布的核心规律。   1. 埃拉托斯特尼筛法 (Sieve of Eratosthenes)找出所有不超过 $N$ 的质数的经典算法：  列出从 $2$ 到 $N$ 的所有整数。 从 $p&#x3D;2$ 开始，划去所有 $p$ 的倍数（$p^2, p^2+p, \dots$）。 找到下一个未被划去的数作为新的 $p$，重复直到 $p &gt; \sqrt">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-06-05T15:12:41.000Z">
-<meta property="article:modified_time" content="2026-06-06T10:02:55.938Z">
+<meta property="article:published_time" content="2026-06-06T12:03:50.000Z">
+<meta property="article:modified_time" content="2026-06-06T12:14:13.559Z">
 <meta property="article:author" content="Swimming">
-<meta property="article:tag" content="数据结构">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>主席树的血与泪 - Swimming&#39;s Blog</title>
+  <title>一切从埃筛的时间复杂度开始 - Swimming&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -305,7 +304,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="主席树的血与泪"></span>
+            <span id="subtitle" data-typed-text="一切从埃筛的时间复杂度开始"></span>
           
         </div>
 
@@ -316,8 +315,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-06-05 23:12" pubdate>
-          June 5, 2026 pm
+        <time datetime="2026-06-06 20:03" pubdate>
+          June 6, 2026 pm
         </time>
       </span>
     
@@ -328,7 +327,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k words
+          2.3k words
         
       </span>
     
@@ -339,7 +338,7 @@
         
         
         
-          15 mins
+          20 mins
         
       </span>
     
@@ -391,81 +390,92 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">主席树的血与泪</h1>
+            <h1 id="seo-header">一切从埃筛的时间复杂度开始</h1>
             
             
               <div class="markdown-body">
                 
-                <p>引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 <code>RE</code> 或 <code>WA</code>。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。</p>
-<h2 id="🛠️-核心原理：我们在解决什么问题？"><a href="#🛠️-核心原理：我们在解决什么问题？" class="headerlink" title="🛠️ 核心原理：我们在解决什么问题？"></a>🛠️ 核心原理：我们在解决什么问题？</h2><p>主席树的核心任务是：<strong>求区间第 $k$ 大&#x2F;小。</strong><br>如果只是求全局第 $k$ 小，我们只需要一棵线段树维护值域。但如果要查区间 $[L, R]$，利用<strong>前缀和</strong>的思想，我们需要第 $R$ 步的线段树减去第 $L-1$ 步的线段树。</p>
-<p>如果每一步都建一棵新树，空间复杂度是 $\mathcal{O}(N^2)$，直接爆炸。<br>所以我们要**”偷懒”**——只新建有变化的节点，剩下的全部连向历史版本。</p>
+                <blockquote>
+<p>从朴素筛法的复杂度分析出发，逐步走入质数分布的核心规律。</p>
+</blockquote>
 <hr>
-<h2 id="💻-核心代码"><a href="#💻-核心代码" class="headerlink" title="💻 核心代码"></a>💻 核心代码</h2><p>下面是完整的实现代码，里面藏着几个非常高级的技巧。</p>
-<figure><div class="code-wrapper"><pre><code class="language-cpp">#include&lt;bits/stdc++.h&gt;
-using namespace std;
-using ll=long long;
-
-int cnt=1;
-struct Node {
-    int val;
-    int l,r;
-}a[5000000]; // 🩸 血泪点1：数组一定要开够大！通常是 N * 40
-
-// ✨ 精妙点1：完全不需要 build 方法
-int insert(int q, int i, int l, int r) {
-    int p = cnt++;
-    a[p] = a[q]; // ✨ 精妙点2：直接复制历史节点的所有信息（左右儿子指针和权值）
-    a[p].val++;
-    if (l == r) { return p; }
-    int mid = (l + r) &gt;&gt; 1;
-    if (i &lt;= mid) a[p].l = insert(a[q].l, i, l, mid);
-    if (i &gt; mid)  a[p].r = insert(a[q].r, i, mid + 1, r);
-    return p;
-}
-
-int query(int q, int p, int k, int l, int r) {
-    if (l == r) { return l; } // 返回离散化后的下标
-    int dif = a[a[q].l].val - a[a[p].l].val; // 前缀和思想：当前区间左子树贡献的频次
-    int mid = (l + r) &gt;&gt; 1;
-    if (k &lt;= dif) { return query(a[q].l, a[p].l, k, l, mid); }
-    return query(a[q].r, a[p].r, k - dif, mid + 1, r); // 去右子树找第 k - dif 小
-}
-
-int main() {
-    ios::sync_with_stdio(false); cin.tie(nullptr);
-
-    int n, q; cin &gt;&gt; n &gt;&gt; q;
-    vector&lt;ll&gt; nums(n + 1);
-    vector&lt;ll&gt; nums1(n + 1); // 副本，用于离散化
-    unordered_map&lt;ll, int&gt; mp;
-    for (int i = 1; i &lt;= n; i++) {
-        cin &gt;&gt; nums[i];
-        nums1[i] = nums[i];
-    }
-    
-    // 🩸 血泪点2：离散化三步走（注意 vector 1-indexed 的擦除问题）
-    sort(nums1.begin() + 1, nums1.end());
-    auto it = unique(nums1.begin() + 1, nums1.end());
-    nums1.erase(it, nums1.end());
-    int s = nums1.size() - 1;
-    for (int i = 1; i &lt;= s; i++) { mp[nums1[i]] = i; }
-    
-    // 根节点数组，用于记录每次插入后的新树根
-    vector&lt;int&gt; root(n + 1, 0);
-    for (int i = 1; i &lt;= n; i++) {
-        root[i] = insert(root[i - 1], mp[nums[i]], 1, s); // 复用上一棵树 root[i-1]
-    }
-    
-    // 询问
-    for (int i = 0; i &lt; q; i++) {
-        int u, v, k; cin &gt;&gt; u &gt;&gt; v &gt;&gt; k;
-        // 🩸 血泪点3：前缀和区间是 root[v] 和 root[u-1]
-        cout &lt;&lt; nums1[query(root[v], root[u - 1], k, 1, s)] &lt;&lt; &#39;\n&#39;;
-    }
-    return 0;
-}
-</code></pre></div></figure>
-
+<h2 id="1-埃拉托斯特尼筛法-Sieve-of-Eratosthenes"><a href="#1-埃拉托斯特尼筛法-Sieve-of-Eratosthenes" class="headerlink" title="1. 埃拉托斯特尼筛法 (Sieve of Eratosthenes)"></a>1. 埃拉托斯特尼筛法 (Sieve of Eratosthenes)</h2><p>找出所有不超过 $N$ 的质数的经典算法：</p>
+<ol>
+<li>列出从 $2$ 到 $N$ 的所有整数。</li>
+<li>从 $p&#x3D;2$ 开始，划去所有 $p$ 的倍数（$p^2, p^2+p, \dots$）。</li>
+<li>找到下一个未被划去的数作为新的 $p$，重复直到 $p &gt; \sqrt{N}$。</li>
+</ol>
+<p>最后未被划去的数即为质数。</p>
+<hr>
+<h2 id="2-朴素复杂度：为什么是-O-N-log-N-的错觉？"><a href="#2-朴素复杂度：为什么是-O-N-log-N-的错觉？" class="headerlink" title="2. 朴素复杂度：为什么是 $O(N \log N)$ 的错觉？"></a>2. 朴素复杂度：为什么是 $O(N \log N)$ 的错觉？</h2><p>初看，每个质数 $p$ 需划去约 $N&#x2F;p$ 个数，总操作次数大约为：</p>
+<p>$$<br>\sum_{p \le N} \frac{N}{p} &#x3D; N \sum_{p \le N} \frac{1}{p}<br>$$</p>
+<p>如果直接用</p>
+<p>$$<br>\sum_{p \le N} \frac{1}{p} \approx \log \log N<br>$$</p>
+<p>当然就得到 $O(N \log \log N)$。</p>
+<p>但推导这一估计本身，就需要解析数论的支持。若没有这一结果，人们可能会误用调和级数上界</p>
+<p>$$<br>\sum_{n \le N} \frac{1}{n} \sim \log N<br>$$</p>
+<p>从而错误认为复杂度为 $O(N \log N)$。</p>
+<hr>
+<h2 id="3-精确分析：-O-N-log-log-N-的出处"><a href="#3-精确分析：-O-N-log-log-N-的出处" class="headerlink" title="3. 精确分析：$O(N \log \log N)$ 的出处"></a>3. 精确分析：$O(N \log \log N)$ 的出处</h2><p>埃筛真正的操作次数为：</p>
+<p>$$<br>C(N) &#x3D; \sum_{p \le \sqrt{N}} \left(\frac{N}{p} - p + 1\right) + \text{剩余部分}<br>$$</p>
+<p>主项为：</p>
+<p>$$<br>N \sum_{p \le \sqrt{N}} \frac{1}{p}<br>$$</p>
+<p>因此，复杂度常数直接由 <strong>质数倒数和</strong> 的渐近行为决定。</p>
+<hr>
+<h2 id="4-质数倒数和与默滕斯第二定理"><a href="#4-质数倒数和与默滕斯第二定理" class="headerlink" title="4. 质数倒数和与默滕斯第二定理"></a>4. 质数倒数和与默滕斯第二定理</h2><p>默滕斯第二定理（1874）给出了精确估计：</p>
+<p>$$<br>\sum_{p \le x} \frac{1}{p} &#x3D; \log \log x + M + o(1)<br>$$</p>
+<p>其中 $M \approx 0.26149$ 为默滕斯常数。</p>
+<p>代入 $x &#x3D; \sqrt{N}$，得：</p>
+<p>$$<br>\sum_{p \le \sqrt{N}} \frac{1}{p} &#x3D; \log \log \sqrt{N} + M + o(1) &#x3D; \log \log N - \log 2 + M + o(1)<br>$$</p>
+<p>因此埃筛的总操作次数为：</p>
+<p>$$<br>C(N) &#x3D; N (\log \log N + O(1))<br>$$</p>
+<p>这就是经典结论：</p>
+<p><strong>埃筛时间复杂度为 $O(N \log \log N)$。</strong></p>
+<hr>
+<h2 id="5-默滕斯第二定理如何得来？"><a href="#5-默滕斯第二定理如何得来？" class="headerlink" title="5. 默滕斯第二定理如何得来？"></a>5. 默滕斯第二定理如何得来？</h2><p>默滕斯第二定理的推导正是从欧拉乘积出发：</p>
+<p>$$<br>\zeta(s) &#x3D; \sum_{n&#x3D;1}^{\infty} \frac{1}{n^s} &#x3D; \prod_p \frac{1}{1 - p^{-s}}, \quad (s &gt; 1)<br>$$</p>
+<p>取对数：</p>
+<p>$$<br>\log \zeta(s) &#x3D; \sum_p \frac{1}{p^s} + \text{高阶项}<br>$$</p>
+<p>利用</p>
+<p>$$<br>\zeta(s) &#x3D; \frac{1}{s-1} + \gamma + \cdots<br>$$</p>
+<p>在 $s&#x3D;1$ 的极点展开，得到：</p>
+<p>$$<br>\sum_p \frac{1}{p^s} &#x3D; -\log(s-1) - C + o(1), \quad (s \to 1^+)<br>$$</p>
+<p>再通过 Tauber 型定理（或阿贝尔求和）即可反演出：</p>
+<p>$$<br>\sum_{p \le x} \frac{1}{p} &#x3D; \log \log x + M + o(1)<br>$$</p>
+<p>所以，</p>
+<p><strong>埃筛的 $O(N \log \log N)$ 本质上等价于质数倒数和发散的速度为 $\log \log x$。</strong></p>
+<hr>
+<h2 id="6-更进一步：常数因子与默滕斯第三定理"><a href="#6-更进一步：常数因子与默滕斯第三定理" class="headerlink" title="6. 更进一步：常数因子与默滕斯第三定理"></a>6. 更进一步：常数因子与默滕斯第三定理</h2><p>更精细的分析表明，埃筛的实际执行次数常数与连乘积有关。</p>
+<p>在筛法中，未被划去的数的比例近似为：</p>
+<p>$$<br>\prod_{p \le \sqrt{N}} \left(1 - \frac{1}{p}\right)<br>$$</p>
+<p>默滕斯第三定理给出：</p>
+<p>$$<br>\prod_{p \le x} \left(1 - \frac{1}{p}\right) \sim \frac{e^{-\gamma}}{\log x}<br>$$</p>
+<p>代入 $x &#x3D; \sqrt{N}$ 得比例约为：</p>
+<p>$$<br>\frac{2 e^{-\gamma}}{\log N}<br>$$</p>
+<p>与埃筛剩余质数的计数一致。</p>
+<p>这从另一角度印证了复杂度常数中蕴含的 $e^{-\gamma}$ 因子。</p>
+<hr>
+<h2 id="7-从埃筛到素数定理（质数密度）"><a href="#7-从埃筛到素数定理（质数密度）" class="headerlink" title="7. 从埃筛到素数定理（质数密度）"></a>7. 从埃筛到素数定理（质数密度）</h2><p>埃筛的复杂度是 $\pi(N)$ 与 $\sum 1&#x2F;p$ 共同作用的结果。</p>
+<p>默滕斯定理虽然是中间结果，却暗示了更深的规律。</p>
+<p>利用默滕斯第一定理：</p>
+<p>$$<br>\sum_{p \le x} \frac{\log p}{p} &#x3D; \log x + O(1)<br>$$</p>
+<p>可以推出切比雪夫估计，并最终通过复分析证明素数定理：</p>
+<p>$$<br>\pi(x) \sim \frac{x}{\log x}<br>$$</p>
+<p>也就是说，</p>
+<p><strong>埃筛复杂度 $O(N \log \log N)$ 里那个双重对数，恰是质数密度为 $1&#x2F;\log N$ 的直接体现。</strong></p>
+<hr>
+<h2 id="8-逻辑链条总览"><a href="#8-逻辑链条总览" class="headerlink" title="8. 逻辑链条总览"></a>8. 逻辑链条总览</h2><pre><code class="mermaid">graph TD
+    A["埃筛操作计数&lt;br/> N Σ 1/p"] --> B["需要估计&lt;br/> Σ_&#123;p≤x&#125; 1/p"]
+    B --> C["默滕斯第二定理&lt;br/> Σ 1/p = loglog x + M + o(1)"]
+    C --> D["埃筛复杂度&lt;br/> O(N log log N)"]
+    C --> E["默滕斯第三定理&lt;br/> ∏ (1-1/p) ~ e^&#123;-γ&#125; / log x"]
+    C --> F["默滕斯第一定理&lt;br/> Σ (log p)/p = log x + O(1)"]
+    F --> G["素数定理&lt;br/> π(x) ~ x / log x"]
+    D --> H["质数密度 ~ 1/log x"]
+    G --> H
+    B --> I["欧拉乘积&lt;br/> ζ(s)=∏ (1-p^&#123;-s&#125;)^&#123;-1&#125;"]
+    C --> I
+    F --> I</code></pre>
                 
               </div>
             
@@ -473,13 +483,6 @@ int main() {
             <div>
               <div class="post-metas my-3">
   
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="print-no-link">#数据结构</a>
-      
-    </div>
   
 </div>
 
@@ -489,8 +492,8 @@ int main() {
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>主席树的血与泪</div>
-      <div>https://swimming001.github.io/posts/主席树的血与泪.html</div>
+      <div>一切从埃筛的时间复杂度开始</div>
+      <div>https://swimming001.github.io/posts/一切从埃筛的时间复杂度开始.html</div>
     </div>
     <div class="license-meta">
       
@@ -502,7 +505,7 @@ int main() {
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>June 5, 2026</div>
+          <div>June 6, 2026</div>
         </div>
       
       
@@ -534,18 +537,12 @@ int main() {
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/%E4%B8%80%E5%88%87%E4%BB%8E%E5%9F%83%E7%AD%9B%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%BC%80%E5%A7%8B.html" title="一切从埃筛的时间复杂度开始">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">一切从埃筛的时间复杂度开始</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/hello-world.html" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/posts/%E4%B8%BB%E5%B8%AD%E6%A0%91%E7%9A%84%E8%A1%80%E4%B8%8E%E6%B3%AA.html" title="主席树的血与泪">
+                        <span class="hidden-mobile">主席树的血与泪</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -19,15 +19,15 @@
   <meta name="author" content="Swimming">
   <meta name="keywords" content="">
   
-    <meta name="description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。 🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大&#x2F;小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需要">
+    <meta name="description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。  🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大&#x2F;小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需">
 <meta property="og:type" content="article">
 <meta property="og:title" content="主席树的血与泪">
 <meta property="og:url" content="https://swimming001.github.io/posts/%E4%B8%BB%E5%B8%AD%E6%A0%91%E7%9A%84%E8%A1%80%E4%B8%8E%E6%B3%AA.html">
 <meta property="og:site_name" content="Swimming&#39;s Blog">
-<meta property="og:description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。 🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大&#x2F;小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需要">
+<meta property="og:description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。  🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大&#x2F;小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2026-06-05T15:12:41.000Z">
-<meta property="article:modified_time" content="2026-06-06T10:02:55.938Z">
+<meta property="article:modified_time" content="2026-06-08T13:14:34.239Z">
 <meta property="article:author" content="Swimming">
 <meta property="article:tag" content="数据结构">
 <meta name="twitter:card" content="summary_large_image">
@@ -72,11 +72,15 @@
 
 
 
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+
+
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"swimming001.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"swimming001.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -86,6 +90,22 @@
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
 
 
   
@@ -399,15 +419,15 @@
               <div class="markdown-body">
                 
                 <p>引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 <code>RE</code> 或 <code>WA</code>。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。</p>
-<h2 id="🛠️-核心原理：我们在解决什么问题？">🛠️ 核心原理：我们在解决什么问题？</h2>
-<p>主席树的核心任务是：<strong>求区间第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span> 大/小。</strong><br>
-如果只是求全局第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span> 小，我们只需要一棵线段树维护值域。但如果要查区间 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>[</mo><mi>L</mi><mo separator="true">,</mo><mi>R</mi><mo>]</mo></mrow><annotation encoding="application/x-tex">[L, R]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">[</span><span class="mord mathit">L</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mclose">]</span></span></span></span>，利用<strong>前缀和</strong>的思想，我们需要第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span> 步的线段树减去第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">L-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit">L</span><span class="mbin">−</span><span class="mord mathrm">1</span></span></span></span> 步的线段树。</p>
-<p>如果每一步都建一棵新树，空间复杂度是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi mathvariant="script">O</mi></mrow><mo>(</mo><msup><mi>N</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">\mathcal{O}(N^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>，直接爆炸。<br>
+<h2 id="️-核心原理我们在解决什么问题"><a class="markdownIt-Anchor" href="#️-核心原理我们在解决什么问题"></a> 🛠️ 核心原理：我们在解决什么问题？</h2>
+<p>主席树的核心任务是：<strong>求区间第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span> 大/小。</strong><br />
+如果只是求全局第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.03148em;">k</span></span></span></span> 小，我们只需要一棵线段树维护值域。但如果要查区间 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo stretchy="false">[</mo><mi>L</mi><mo separator="true">,</mo><mi>R</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[L, R]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord mathdefault">L</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span><span class="mclose">]</span></span></span></span>，利用<strong>前缀和</strong>的思想，我们需要第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span> 步的线段树减去第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">L-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">L</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span></span></span></span> 步的线段树。</p>
+<p>如果每一步都建一棵新树，空间复杂度是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="script">O</mi><mo stretchy="false">(</mo><msup><mi>N</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathcal{O}(N^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span>，直接爆炸。<br />
 所以我们要**“偷懒”**——只新建有变化的节点，剩下的全部连向历史版本。</p>
-<hr>
-<h2 id="💻-核心代码">💻 核心代码</h2>
+<hr />
+<h2 id="核心代码"><a class="markdownIt-Anchor" href="#核心代码"></a> 💻 核心代码</h2>
 <p>下面是完整的实现代码，里面藏着几个非常高级的技巧。</p>
-<figure><div class="code-wrapper"><pre><code class="language-cpp">#include&lt;bits/stdc++.h&gt;
+<figure><div class="code-wrapper"><pre class="highlight"><code class="language-cpp">#include&lt;bits/stdc++.h&gt;
 using namespace std;
 using ll=long long;
 
@@ -803,6 +823,10 @@ int main() {
 </script>
 
 
+  <script  src="https://lib.baomitu.com/prism/1.29.0/components/prism-core.min.js" ></script>
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js" ></script>
+
   <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
 
   <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
@@ -857,6 +881,8 @@ int main() {
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/openkounter.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

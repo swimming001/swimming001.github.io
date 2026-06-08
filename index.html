@@ -59,11 +59,15 @@
 
 
 
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+
+
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"swimming001.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"swimming001.github.io","root":"/","version":"1.9.9","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"expand_all":true,"placement":"left","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"openkounter":{"server_url":"https://open-kounter.mintimate.cn","path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -73,6 +77,22 @@
   <script  src="/js/utils.js" ></script>
   <script  src="/js/color-schema.js" ></script>
   
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
 
 
   
@@ -343,7 +363,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/posts/A-sad-day.html" target="_self">
         <div>
-          呜呜呜，A Lesson Carved in Code 😢Today, the unexpected happened, and it honestly feels like the saddest event. I want to document this moment so I can remember it forever, learn from it, and look back on
+          呜呜呜，A Lesson Carved in Code 😢 Today, the unexpected happened, and it honestly feels like the saddest event. I want to document this moment so I can remember it forever, learn from it, and look back
         </div>
       </a>
 
@@ -387,7 +407,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/posts/%E4%B8%80%E5%88%87%E4%BB%8E%E5%9F%83%E7%AD%9B%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%BC%80%E5%A7%8B.html" target="_self">
         <div>
-          从朴素筛法的复杂度分析出发，逐步走入质数分布的核心规律。   1. 埃拉托斯特尼筛法 (Sieve of Eratosthenes) 找出所有不超过 NNN 的质数的经典算法：  列出从 222 到 NNN 的所有整数。 从 p=2p=2p=2 开始，划去所有 ppp 的倍数（p^2, p^2+p, \dots）。 找到下一个未被划去的数作为新的 ppp，重复直到 p&gt;Np &gt; \s
+          从朴素筛法的复杂度分析出发，逐步走入质数分布的核心规律。    1. 埃拉托斯特尼筛法 (Sieve of Eratosthenes) 找出所有不超过 NNN 的质数的经典算法：  列出从 222 到 NNN 的所有整数。 从 p=2p=2p=2 开始，划去所有 ppp 的倍数（p2,p2+p,…p^2, p^2+p, \dotsp2,p2+p,…）。 找到下一个未被划去的数作为新的 ppp，重
         </div>
       </a>
 
@@ -429,7 +449,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/posts/%E4%B8%BB%E5%B8%AD%E6%A0%91%E7%9A%84%E8%A1%80%E4%B8%8E%E6%B3%AA.html" target="_self">
         <div>
-          引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。 🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大/小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需要
+          引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。  🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大/小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需
         </div>
       </a>
 
@@ -469,7 +489,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/posts/hello-world.html" target="_self">
         <div>
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.  Quic
         </div>
       </a>
 
@@ -589,6 +609,8 @@
 
 
 
+
+  <script defer src="/js/openkounter.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

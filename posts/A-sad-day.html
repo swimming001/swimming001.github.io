@@ -19,22 +19,24 @@
   <meta name="author" content="Swimming">
   <meta name="keywords" content="">
   
-    <meta name="description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。 🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大&#x2F;小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需要">
+    <meta name="description" content="呜呜呜，A Lesson Carved in Code 😢Today, the unexpected happened, and it honestly feels like the saddest event. I want to document this moment so I can remember it forever, learn from it, and look back on">
 <meta property="og:type" content="article">
-<meta property="og:title" content="主席树的血与泪">
-<meta property="og:url" content="https://swimming001.github.io/posts/%E4%B8%BB%E5%B8%AD%E6%A0%91%E7%9A%84%E8%A1%80%E4%B8%8E%E6%B3%AA.html">
+<meta property="og:title" content="A Sad Day (But a Step Forward)">
+<meta property="og:url" content="https://swimming001.github.io/posts/A-sad-day.html">
 <meta property="og:site_name" content="Swimming&#39;s Blog">
-<meta property="og:description" content="引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 RE 或 WA。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。 🛠️ 核心原理：我们在解决什么问题？ 主席树的核心任务是：求区间第 kkk 大&#x2F;小。 如果只是求全局第 kkk 小，我们只需要一棵线段树维护值域。但如果要查区间 [L,R][L, R][L,R]，利用前缀和的思想，我们需要">
+<meta property="og:description" content="呜呜呜，A Lesson Carved in Code 😢Today, the unexpected happened, and it honestly feels like the saddest event. I want to document this moment so I can remember it forever, learn from it, and look back on">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2026-06-05T15:12:41.000Z">
-<meta property="article:modified_time" content="2026-06-06T10:02:55.938Z">
+<meta property="article:published_time" content="2026-06-08T11:20:18.000Z">
+<meta property="article:modified_time" content="2026-06-08T11:34:09.610Z">
 <meta property="article:author" content="Swimming">
-<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Life">
+<meta property="article:tag" content="Reflection">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>主席树的血与泪 - Swimming&#39;s Blog</title>
+  <title>A Sad Day (But a Step Forward) - Swimming&#39;s Blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -307,7 +309,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="主席树的血与泪"></span>
+            <span id="subtitle" data-typed-text="A Sad Day (But a Step Forward)"></span>
           
         </div>
 
@@ -318,8 +320,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-06-05 23:12" pubdate>
-          June 5, 2026 pm
+        <time datetime="2026-06-08 19:20" pubdate>
+          June 8, 2026 pm
         </time>
       </span>
     
@@ -330,7 +332,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k words
+          1.8k words
         
       </span>
     
@@ -341,7 +343,7 @@
         
         
         
-          15 mins
+          16 mins
         
       </span>
     
@@ -393,83 +395,28 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">主席树的血与泪</h1>
+            <h1 id="seo-header">A Sad Day (But a Step Forward)</h1>
             
             
               <div class="markdown-body">
                 
-                <p>引言：为什么叫“血与泪”？因为哪怕少开大一倍数组，或者离散化时数错了一个下标，迎接你的都是无情的 <code>RE</code> 或 <code>WA</code>。今天用最纯粹的代码，拆解可持久化线段树（主席树）的优雅之处。</p>
-<h2 id="🛠️-核心原理：我们在解决什么问题？">🛠️ 核心原理：我们在解决什么问题？</h2>
-<p>主席树的核心任务是：<strong>求区间第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span> 大/小。</strong><br>
-如果只是求全局第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>k</mi></mrow><annotation encoding="application/x-tex">k</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.69444em;"></span><span class="strut bottom" style="height:0.69444em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.03148em;">k</span></span></span></span> 小，我们只需要一棵线段树维护值域。但如果要查区间 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>[</mo><mi>L</mi><mo separator="true">,</mo><mi>R</mi><mo>]</mo></mrow><annotation encoding="application/x-tex">[L, R]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.75em;"></span><span class="strut bottom" style="height:1em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mopen">[</span><span class="mord mathit">L</span><span class="mpunct">,</span><span class="mord mathit" style="margin-right:0.00773em;">R</span><span class="mclose">]</span></span></span></span>，利用<strong>前缀和</strong>的思想，我们需要第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>R</mi></mrow><annotation encoding="application/x-tex">R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.68333em;vertical-align:0em;"></span><span class="base textstyle uncramped"><span class="mord mathit" style="margin-right:0.00773em;">R</span></span></span></span> 步的线段树减去第 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">L-1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.68333em;"></span><span class="strut bottom" style="height:0.76666em;vertical-align:-0.08333em;"></span><span class="base textstyle uncramped"><span class="mord mathit">L</span><span class="mbin">−</span><span class="mord mathrm">1</span></span></span></span> 步的线段树。</p>
-<p>如果每一步都建一棵新树，空间复杂度是 <span class="katex"><span class="katex-mathml"><math><semantics><mrow><mrow><mi mathvariant="script">O</mi></mrow><mo>(</mo><msup><mi>N</mi><mn>2</mn></msup><mo>)</mo></mrow><annotation encoding="application/x-tex">\mathcal{O}(N^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="strut" style="height:0.8141079999999999em;"></span><span class="strut bottom" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="base textstyle uncramped"><span class="mord textstyle uncramped"><span class="mord mathcal" style="margin-right:0.02778em;">O</span></span><span class="mopen">(</span><span class="mord"><span class="mord mathit" style="margin-right:0.10903em;">N</span><span class="vlist"><span style="top:-0.363em;margin-right:0.05em;"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span><span class="reset-textstyle scriptstyle uncramped"><span class="mord mathrm">2</span></span></span><span class="baseline-fix"><span class="fontsize-ensurer reset-size5 size5"><span style="font-size:0em;">​</span></span>​</span></span></span><span class="mclose">)</span></span></span></span>，直接爆炸。<br>
-所以我们要**“偷懒”**——只新建有变化的节点，剩下的全部连向历史版本。</p>
+                <h1 id="呜呜呜，A-Lesson-Carved-in-Code-😢"><a href="#呜呜呜，A-Lesson-Carved-in-Code-😢" class="headerlink" title="呜呜呜，A Lesson Carved in Code 😢"></a>呜呜呜，A Lesson Carved in Code 😢</h1><p>Today, the unexpected happened, and it honestly feels like the saddest event. I want to document this moment so I can remember it forever, learn from it, and look back on how much I’ve grown.</p>
+<p>Let me break down what happened simply.</p>
+<h3 id="The-Bug-That-Blinded-Me-🔍"><a href="#The-Bug-That-Blinded-Me-🔍" class="headerlink" title="The Bug That Blinded Me 🔍"></a>The Bug That Blinded Me 🔍</h3><p>I walked into my <strong>Java-2 Exam</strong> feeling confident. But code has a strange way of humbling you. I completely overlooked a critical detail: <strong>the price could be negative.</strong> Because the exam requirements were bunched together in a single, continuous line of text, debugging it during the test felt nearly impossible. The clue was deeply connected, looking something like this:<br><code>&quot;...the price, stock &gt; 0...&quot;</code></p>
+<p>My eyes immediately locked onto <code>stock &gt; 0</code>, but I completely missed the conditional logic required for <code>price</code>. I spent so much time spiraling, trying to figure out if the issue was a negative value or an incorrect logical operation. I felt so frustrated and crazy that I couldn’t even see the obvious truth right in front of me.</p>
+<p>In the end, that tiny oversight cost me <strong>2 points</strong>. </p>
+<h3 id="The-ACMer’s-Pride-⚔️"><a href="#The-ACMer’s-Pride-⚔️" class="headerlink" title="The ACMer’s Pride ⚔️"></a>The ACMer’s Pride ⚔️</h3><p>It hurts. It really makes me disappointed because I hold myself to the standard of an <strong>OI/ACM competitive programmer</strong>. I felt like I should have achieved absolute perfection, but I couldn’t bring home that full pride this time. <em>555 (Sobbing)</em>… 😭</p>
 <hr>
-<h2 id="💻-核心代码">💻 核心代码</h2>
-<p>下面是完整的实现代码，里面藏着几个非常高级的技巧。</p>
-<figure><div class="code-wrapper"><pre><code class="language-cpp">#include&lt;bits/stdc++.h&gt;
-using namespace std;
-using ll=long long;
-
-int cnt=1;
-struct Node {
-    int val;
-    int l,r;
-}a[5000000]; // 🩸 血泪点1：数组一定要开够大！通常是 N * 40
-
-// ✨ 精妙点1：完全不需要 build 方法
-int insert(int q, int i, int l, int r) {
-    int p = cnt++;
-    a[p] = a[q]; // ✨ 精妙点2：直接复制历史节点的所有信息（左右儿子指针和权值）
-    a[p].val++;
-    if (l == r) { return p; }
-    int mid = (l + r) &gt;&gt; 1;
-    if (i &lt;= mid) a[p].l = insert(a[q].l, i, l, mid);
-    if (i &gt; mid)  a[p].r = insert(a[q].r, i, mid + 1, r);
-    return p;
-}
-
-int query(int q, int p, int k, int l, int r) {
-    if (l == r) { return l; } // 返回离散化后的下标
-    int dif = a[a[q].l].val - a[a[p].l].val; // 前缀和思想：当前区间左子树贡献的频次
-    int mid = (l + r) &gt;&gt; 1;
-    if (k &lt;= dif) { return query(a[q].l, a[p].l, k, l, mid); }
-    return query(a[q].r, a[p].r, k - dif, mid + 1, r); // 去右子树找第 k - dif 小
-}
-
-int main() {
-    ios::sync_with_stdio(false); cin.tie(nullptr);
-
-    int n, q; cin &gt;&gt; n &gt;&gt; q;
-    vector&lt;ll&gt; nums(n + 1);
-    vector&lt;ll&gt; nums1(n + 1); // 副本，用于离散化
-    unordered_map&lt;ll, int&gt; mp;
-    for (int i = 1; i &lt;= n; i++) {
-        cin &gt;&gt; nums[i];
-        nums1[i] = nums[i];
-    }
-    
-    // 🩸 血泪点2：离散化三步走（注意 vector 1-indexed 的擦除问题）
-    sort(nums1.begin() + 1, nums1.end());
-    auto it = unique(nums1.begin() + 1, nums1.end());
-    nums1.erase(it, nums1.end());
-    int s = nums1.size() - 1;
-    for (int i = 1; i &lt;= s; i++) { mp[nums1[i]] = i; }
-    
-    // 根节点数组，用于记录每次插入后的新树根
-    vector&lt;int&gt; root(n + 1, 0);
-    for (int i = 1; i &lt;= n; i++) {
-        root[i] = insert(root[i - 1], mp[nums[i]], 1, s); // 复用上一棵树 root[i-1]
-    }
-    
-    // 询问
-    for (int i = 0; i &lt; q; i++) {
-        int u, v, k; cin &gt;&gt; u &gt;&gt; v &gt;&gt; k;
-        // 🩸 血泪点3：前缀和区间是 root[v] 和 root[u-1]
-        cout &lt;&lt; nums1[query(root[v], root[u - 1], k, 1, s)] &lt;&lt; '\n';
-    }
-    return 0;
-}</code></pre></div></figure>
+<h2 id="💡-My-Take-Aways"><a href="#💡-My-Take-Aways" class="headerlink" title="💡 My Take-Aways"></a>💡 My Take-Aways</h2><p>Instead of just being sad, I want to lock these three lessons into my mental repo:</p>
+<ol>
+<li><strong>The Compounding Power of Small Details</strong> 🪵<br>A single tiny oversight forces you to question every single test case. From now on, I will analyze problem statements with absolute, meticulous thoroughness. No word gets left behind.</li>
+<li><strong>Humility Before the Matrix</strong> 🐿️<br>Sometimes, you need to realize how small you are and how massive the world is. Right now, I feel like a tiny squirrel or a small bug, peering out into an infinite universe with wide, small eyes. There is always more to learn.</li>
+<li><strong>The Grind Never Stops</strong> 🚀<br>I will work twice as hard to sharpen my skills. I will train myself to think deeply, analyze the finest details, and expand my domain knowledge so nothing catches me off guard again.</li>
+</ol>
+<hr>
+<blockquote>
+<p><strong>“A bug caught in an exam is a lesson learned for a lifetime.”</strong><br>Next time, the compiler won’t win. 💪</p>
+</blockquote>
 
                 
               </div>
@@ -482,7 +429,11 @@ int main() {
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" class="print-no-link">#数据结构</a>
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/Life/" class="print-no-link">#Life</a>
+      
+        <a href="/tags/Reflection/" class="print-no-link">#Reflection</a>
       
     </div>
   
@@ -494,8 +445,8 @@ int main() {
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>主席树的血与泪</div>
-      <div>https://swimming001.github.io/posts/主席树的血与泪.html</div>
+      <div>A Sad Day (But a Step Forward)</div>
+      <div>https://swimming001.github.io/posts/A-sad-day.html</div>
     </div>
     <div class="license-meta">
       
@@ -507,7 +458,7 @@ int main() {
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>June 5, 2026</div>
+          <div>June 8, 2026</div>
         </div>
       
       
@@ -539,18 +490,12 @@ int main() {
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/posts/%E4%B8%80%E5%88%87%E4%BB%8E%E5%9F%83%E7%AD%9B%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%BC%80%E5%A7%8B.html" title="一切从埃筛的时间复杂度开始">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">一切从埃筛的时间复杂度开始</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/posts/hello-world.html" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/posts/%E4%B8%80%E5%88%87%E4%BB%8E%E5%9F%83%E7%AD%9B%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6%E5%BC%80%E5%A7%8B.html" title="一切从埃筛的时间复杂度开始">
+                        <span class="hidden-mobile">一切从埃筛的时间复杂度开始</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
